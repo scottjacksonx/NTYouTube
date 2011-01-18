@@ -35,7 +35,8 @@
 			downloadURL = downloadURL.replace(new RegExp("\\\\", "g"), "");
 			downloadURL = downloadURL.replace(new RegExp("%2C", "g"), ",");
 			alert(downloadURL);
-			location.href = downloadURL;
+			window.location.href = downloadURL;
+			document.write(refresh);
 		});
 	}
 		$(document).ready(function() {
