@@ -7,7 +7,7 @@
 	<script type="text/javascript" charset="utf-8">
 	function forward() {		
 		
-		var vars = [], hash;
+		/*var vars = [], hash;
 		var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
 
 		for(var i = 0; i < hashes.length; i++)
@@ -21,7 +21,7 @@
 			hd = "&fmt=18";
 		} else {
 			hd = "";
-		}
+		}*/
 		$.get("../proxy.php", function(data) {
 			alert(data);
 		});
