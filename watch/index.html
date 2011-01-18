@@ -4,9 +4,9 @@
 	<meta http-equiv=Content-type content="text/html; charset=utf-8">
 	<title>NTYouTube</title>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
-	<script type="text/javascript" src="jquery.xdomainajax.js"></script>
 	<script type="text/javascript" charset="utf-8">
-	function forward() {
+	function forward() {		
+		
 		var vars = [], hash;
 		var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
 
@@ -22,7 +22,11 @@
 		} else {
 			hd = "";
 		}
-		$.get("http://youtube.com/watch?v=" + vars['v'] + hd, function(data) {
+		$.get("../proxy.php?v=" + vars['v'], function(data) {
+			alert(data);
+		});
+		/*$.get("http://youtube.com/watch?v=" + vars['v'] + hd, function(data) {
+			alert(data);
 			var fmt = "";
 			if (data.search("'IS_HD_AVAILABLE': true") != -1 && hd != "") {
 				fmt = "22";
@@ -37,12 +41,11 @@
 			downloadURL = downloadURL.replace(new RegExp("%2C", "g"), ",");
 			alert(downloadURL);
 			window.location.href = downloadURL;
-			document.write(refresh);
 		});
 	}
 		$(document).ready(function() {
 			forward();
-		});
+		});*/
 	</script>
 </head>
 <body>
