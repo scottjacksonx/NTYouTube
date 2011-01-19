@@ -16,7 +16,11 @@ if ($handle) {
 		$source_code .= fgets($handle, 4096);
 	}
 	fclose($handle);
-	$dStart = strpos($source_code, "18|") + 3;
+	if ($_GET["hd"]) {
+		$dStart = strpos($source_code, "22|") + 3;
+	} else {
+		$dStart = strpos($source_code, "18|") + 3;
+	}
 	$dEnd = strpos($source_code, ",", $dStart);
 	$urlLength = $dEnd - $dStart;
 	$dURL = substr($source_code, $dStart, $urlLength);
