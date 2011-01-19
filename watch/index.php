@@ -22,7 +22,6 @@ if ($handle) {
 	$dURL = substr($source_code, $dStart, $urlLength);
 	$str = str_ireplace("\\", "", $dURL);
 	$handle2 = fopen($str, "r");
-	header("Content-Length: ".filesize($handle2));
 	while (!feof($handle2)) {
 		echo fgets($handle2, 4096);
 	}
