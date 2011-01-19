@@ -1,8 +1,6 @@
 <?php
 
-header("Content-Type: video/mp4");
-header('Content-Disposition: attachment; filename="video.mp4"');
-header("Expires: 0");
+
 
 // Website url to open
 $daurl = 'http://www.youtube.com/watch?v='.$_GET["v"];
@@ -17,7 +15,13 @@ if ($handle) {
 	}
 	fclose($handle);
 	if ($_GET["hd"]) {
-		$dStart = strpos($source_code, "22|") + 3;
+		$dStart = strpos($source_code, "37|") + 3;
+		if (!$dStart) {
+			$dStart = strpos($source_code, "22|") + 3;
+		}
+		if (!$dStart) {
+			$dStart = strpos($source_code, "18|") + 3;
+		}
 	} else {
 		$dStart = strpos($source_code, "18|") + 3;
 	}
@@ -26,6 +30,10 @@ if ($handle) {
 	$dURL = substr($source_code, $dStart, $urlLength);
 	$str = str_ireplace("\\", "", $dURL);
 	$handle2 = fopen($str, "r");
+	header("Content-Type: video/mp4");
+	header('Content-Disposition: attachment; filename="video.mp4"');
+	header("Expires: 0");
+	header("Accept-Ranges: bytes");
 	while (!feof($handle2)) {
 		echo fgets($handle2, 4096);
 	}
