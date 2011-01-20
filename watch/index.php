@@ -33,11 +33,17 @@ if ($handle) {
 	$str = str_ireplace("\\", "", $dURL);
 	$handle2 = fopen($str, "r");
 	header("Content-Type: video/mp4");
-	header('Content-Disposition: attachment; filename="video.mp4"');
 	header("Expires: 0");
 	header("Accept-Ranges: bytes");
 	$filesize = remotefilesize($str);
 	header("Content-Length: ".$filesize);
+	
+	$titleStart = strpos($source_code, "<meta name=\"title\" content=") + 28;
+	$titleEnd = strpos($source_code, "\">", $titleStart);
+	$titleLen = $titleEnd - $titleStart;
+	$title = substr($source_code, $titleStart, $titleLen);
+	header('Content-Disposition: attachment; filename="'.$title.'.mp4"');
+	
 	while (!feof($handle2)) {
 		echo fgets($handle2, 4096);
 	}
