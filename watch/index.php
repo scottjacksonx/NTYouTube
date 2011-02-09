@@ -11,50 +11,45 @@ $userAgent = $_SERVER['HTTP_USER_AGENT'];
 $nt = "NoteTote";
 $s = substr($userAgent, 0, 8);
 
-if (strcmp($nt, $s) != 0) {
-	echo "<p>As of January 26, 2011, NTYouTube only works from within <a href='http://notetoteapp.com'>NoteTote</a>.</p><p>&mdash; Scott</p>";
-} else {
+$daurl = 'http://www.youtube.com/watch?v='.$_GET["v"];
+$handle = fopen($daurl, "r");
+$source_code = "";
 
-	$daurl = 'http://www.youtube.com/watch?v='.$_GET["v"];
-	$handle = fopen($daurl, "r");
-	$source_code = "";
-
-	if ($handle) {
-		while (!feof($handle)) {
-			$source_code .= fgets($handle, 4096);
+if ($handle) {
+	while (!feof($handle)) {
+		$source_code .= fgets($handle, 4096);
+	}
+	fclose($handle);
+	if ($_GET["hd"]) {
+		$dStart = strpos($source_code, "37|") + 3;
+		if (!$dStart) {
+			$dStart = strpos($source_code, "22|") + 3;
 		}
-		fclose($handle);
-		if ($_GET["hd"]) {
-			$dStart = strpos($source_code, "37|") + 3;
-			if (!$dStart) {
-				$dStart = strpos($source_code, "22|") + 3;
-			}
-			if (!$dStart) {
-				$dStart = strpos($source_code, "18|") + 3;
-			}
-		} else {
+		if (!$dStart) {
 			$dStart = strpos($source_code, "18|") + 3;
 		}
-		$dEnd = strpos($source_code, ",", $dStart);
-		$urlLength = $dEnd - $dStart;
-		$dURL = substr($source_code, $dStart, $urlLength);
-		$str = str_ireplace("\\", "", $dURL);
-		$handle2 = fopen($str, "r");
-		header("Content-Type: video/mp4");
-		header("Expires: 0");
-		header("Accept-Ranges: bytes");
-		$filesize = remotefilesize($str);
-		header("Content-Length: ".$filesize);
-	
-		$titleStart = strpos($source_code, "<meta name=\"title\" content=") + 28;
-		$titleEnd = strpos($source_code, "\">", $titleStart);
-		$titleLen = $titleEnd - $titleStart;
-		$title = substr($source_code, $titleStart, $titleLen);
-		header('Content-Disposition: attachment; filename="'.$title.'.mp4"');
-	
-		while (!feof($handle2)) {
-			echo fgets($handle2, 4096);
-		}
+	} else {
+		$dStart = strpos($source_code, "18|") + 3;
+	}
+	$dEnd = strpos($source_code, ",", $dStart);
+	$urlLength = $dEnd - $dStart;
+	$dURL = substr($source_code, $dStart, $urlLength);
+	$str = str_ireplace("\\", "", $dURL);
+	$handle2 = fopen($str, "r");
+	header("Content-Type: video/mp4");
+	header("Expires: 0");
+	header("Accept-Ranges: bytes");
+	$filesize = remotefilesize($str);
+	header("Content-Length: ".$filesize);
+
+	$titleStart = strpos($source_code, "<meta name=\"title\" content=") + 28;
+	$titleEnd = strpos($source_code, "\">", $titleStart);
+	$titleLen = $titleEnd - $titleStart;
+	$title = substr($source_code, $titleStart, $titleLen);
+	header('Content-Disposition: attachment; filename="'.$title.'.mp4"');
+
+	while (!feof($handle2)) {
+		echo fgets($handle2, 4096);
 	}
 }
 ?>
