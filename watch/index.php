@@ -20,26 +20,30 @@ if ($handle) {
 		$source_code .= fgets($handle, 4096);
 	}
 	fclose($handle);
+
+	$dStart = strpos($source_code, "\"fmt_stream_map\": ");
 	if ($_GET["hd"]) {
-		$dStart = strpos($source_code, "37|") + 3;
-		if (!$dStart) {
-			$dStart = strpos($source_code, "22|") + 3;
-		}
-		if (!$dStart) {
-			$dStart = strpos($source_code, "18|") + 3;
+		$dStart2 = strpos($source_code, "22|http", $dStart) + 3;
+		if (!$dStart2) {
+			$dStart = strpos($source_code, "18|http", $dStart) + 3;
+		} else {
+			$dStart = $dStart2;
 		}
 	} else {
-		$dStart = strpos($source_code, "18|") + 3;
+		$dStart = strpos($source_code, "18|http", $dStart) + 3;
 	}
-	$dEnd = strpos($source_code, ",", $dStart);
+	$dEnd = strpos($source_code, "||", $dStart);
 	$urlLength = $dEnd - $dStart;
+	
 	$dURL = substr($source_code, $dStart, $urlLength);
-	$str = str_ireplace("\\", "", $dURL);
-	$handle2 = fopen($str, "r");
+	$dURL = str_ireplace("\\", "", $dURL);
+	$dURL = str_ireplace("u0026", "&", $dURL);
+	$dURL = str_ireplace("%2C", ",", $dURL);
+	$handle2 = fopen($dURL, "r");
 	header("Content-Type: video/mp4");
 	header("Expires: 0");
 	header("Accept-Ranges: bytes");
-	$filesize = remotefilesize($str);
+	$filesize = remotefilesize($dURL);
 	header("Content-Length: ".$filesize);
 
 	$titleStart = strpos($source_code, "<meta name=\"title\" content=") + 28;
@@ -47,7 +51,7 @@ if ($handle) {
 	$titleLen = $titleEnd - $titleStart;
 	$title = substr($source_code, $titleStart, $titleLen);
 	header('Content-Disposition: attachment; filename="'.$title.'.mp4"');
-
+	
 	while (!feof($handle2)) {
 		echo fgets($handle2, 4096);
 	}
