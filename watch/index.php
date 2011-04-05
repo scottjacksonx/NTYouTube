@@ -15,7 +15,7 @@ $daurl = 'http://www.youtube.com/watch?v='.$_GET["v"];
 $handle = fopen($daurl, "r");
 $source_code = "";
 
-if ($handle) {
+if ($handle && !strcmp($s, $nt)) {
 	while (!feof($handle)) {
 		$source_code .= fgets($handle, 4096);
 	}
